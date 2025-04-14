@@ -30,7 +30,15 @@ const SupportBanner: React.FC = () => {
       }
 
       if (data?.value) {
-        setBannerData(data.value as SupportBannerData);
+        // Properly cast the data to SupportBannerData type
+        const bannerValue = data.value as Record<string, any>;
+        const typedBannerData: SupportBannerData = {
+          broker_name: bannerValue.broker_name || '',
+          affiliate_link: bannerValue.affiliate_link || '',
+          crypto_wallet: bannerValue.crypto_wallet || '',
+          message: bannerValue.message || ''
+        };
+        setBannerData(typedBannerData);
       }
     };
 
