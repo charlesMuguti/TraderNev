@@ -9,7 +9,94 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          icon: string
+          id: number
+          slug: string
+          title: string
+        }
+        Insert: {
+          icon: string
+          id?: number
+          slug: string
+          title: string
+        }
+        Update: {
+          icon?: string
+          id?: number
+          slug?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      educators: {
+        Row: {
+          description: string | null
+          id: number
+          name: string
+          platform: string
+          strategy_id: number
+          url: string
+        }
+        Insert: {
+          description?: string | null
+          id?: number
+          name: string
+          platform: string
+          strategy_id: number
+          url: string
+        }
+        Update: {
+          description?: string | null
+          id?: number
+          name?: string
+          platform?: string
+          strategy_id?: number
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "educators_strategy_id_fkey"
+            columns: ["strategy_id"]
+            isOneToOne: false
+            referencedRelation: "strategies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      strategies: {
+        Row: {
+          category_id: number
+          description: string | null
+          id: number
+          slug: string
+          title: string
+        }
+        Insert: {
+          category_id: number
+          description?: string | null
+          id?: number
+          slug: string
+          title: string
+        }
+        Update: {
+          category_id?: number
+          description?: string | null
+          id?: number
+          slug?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "strategies_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

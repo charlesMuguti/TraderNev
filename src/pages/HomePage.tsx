@@ -2,10 +2,44 @@
 import { motion } from "framer-motion";
 import CategoryCard from "@/components/CategoryCard";
 import BackgroundAnimation from "@/components/BackgroundAnimation";
-import { getCategories, Icons } from "@/lib/mockData";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Icons } from "@/lib/mockData";
+import { LucideIcon } from "lucide-react";
+
+interface Category {
+  id: number;
+  title: string;
+  slug: string;
+  icon: string;
+}
 
 const HomePage = () => {
-  const categories = getCategories();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('categories')
+          .select('*');
+        
+        if (error) {
+          console.error('Error fetching categories:', error);
+          return;
+        }
+        
+        setCategories(data || []);
+      } catch (error) {
+        console.error('Failed to fetch categories:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -38,24 +72,40 @@ const HomePage = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          {categories.map((category, index) => {
-            const IconComponent = Icons[category.icon];
-            
-            return (
-              <motion.div
-                key={category.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 * index }}
-              >
-                <CategoryCard 
-                  title={category.title}
-                  slug={category.slug}
-                  icon={IconComponent && <IconComponent size={28} />}
-                />
-              </motion.div>
-            );
-          })}
+          {loading ? (
+            // Loading placeholder
+            Array(8).fill(0).map((_, index) => (
+              <div 
+                key={`loading-${index}`} 
+                className="glass-card dark:glass-card-dark p-6 h-40 animate-pulse"
+              />
+            ))
+          ) : categories.length > 0 ? (
+            categories.map((category, index) => {
+              const IconComponent = Icons[category.icon as keyof typeof Icons] as LucideIcon;
+              
+              return (
+                <motion.div
+                  key={category.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 * index }}
+                >
+                  <CategoryCard 
+                    title={category.title}
+                    slug={category.slug}
+                    icon={IconComponent && <IconComponent size={28} />}
+                  />
+                </motion.div>
+              );
+            })
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <p className="text-gray-500 dark:text-gray-400">
+                No categories found.
+              </p>
+            </div>
+          )}
         </motion.div>
       </div>
     </div>
