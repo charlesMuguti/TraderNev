@@ -1,19 +1,13 @@
+// This hook is no longer used since the SupportBanner is now permanently displayed
+// Keeping the file as a placeholder in case we need to reimplement dismissible behavior
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export const useSupportBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
 
-  useEffect(() => {
-    const dismissedBanner = sessionStorage.getItem('supportBannerDismissed');
-    if (dismissedBanner === 'true') {
-      setIsVisible(false);
-    }
-  }, []);
-
   const dismissBanner = () => {
     setIsVisible(false);
-    sessionStorage.setItem('supportBannerDismissed', 'true');
   };
 
   return { isVisible, dismissBanner };

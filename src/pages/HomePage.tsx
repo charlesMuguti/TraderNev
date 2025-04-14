@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import CategoryCard from "@/components/CategoryCard";
 import BackgroundAnimation from "@/components/BackgroundAnimation";
+import SupportBanner from "@/components/SupportBanner";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Icons } from "@/lib/mockData";
@@ -66,11 +67,20 @@ const HomePage = () => {
           </motion.p>
         </div>
         
+        {/* Support Banner Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <SupportBanner />
+        </motion.div>
+        
         <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
         >
           {loading ? (
             // Loading placeholder

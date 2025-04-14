@@ -1,8 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { supabase } from "@/integrations/supabase/client";
-import { useSupportBanner } from '@/hooks/useSupportBanner';
-import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 interface SupportBannerData {
@@ -14,7 +13,6 @@ interface SupportBannerData {
 
 const SupportBanner: React.FC = () => {
   const [bannerData, setBannerData] = useState<SupportBannerData | null>(null);
-  const { isVisible, dismissBanner } = useSupportBanner();
 
   useEffect(() => {
     const fetchBannerData = async () => {
@@ -52,39 +50,46 @@ const SupportBanner: React.FC = () => {
     }
   };
 
-  if (!isVisible || !bannerData) return null;
+  if (!bannerData) return null;
 
   const formattedMessage = bannerData.message.replace('[broker_name]', bannerData.broker_name);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 w-full glass-card dark:glass-card-dark p-3 flex items-center justify-between">
-      <div className="flex items-center space-x-4 w-full">
-        <p className="text-sm flex-grow text-gray-800 dark:text-gray-200">
-          {formattedMessage}
-        </p>
-        <div className="flex items-center space-x-2">
-          <a 
-            href={bannerData.affiliate_link} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="btn-primary mr-2"
-          >
-            Register with {bannerData.broker_name}
-          </a>
-          <button 
-            onClick={handleCopyWallet} 
-            className="px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-600"
-          >
-            Copy Crypto Wallet
-          </button>
-          <button 
-            onClick={dismissBanner} 
-            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-            aria-label="Dismiss banner"
-          >
-            <X size={20} />
-          </button>
+    <div className="w-full glass-card dark:glass-card-dark p-6 rounded-xl my-8">
+      <div className="flex flex-col md:flex-row items-center gap-4">
+        <div className="flex-grow">
+          <h3 className="text-lg font-medium mb-2 text-gray-800 dark:text-gray-200">Support Us</h3>
+          <p className="text-sm text-gray-700 dark:text-gray-300">
+            {formattedMessage}
+          </p>
         </div>
+        <div className="flex flex-col sm:flex-row gap-3 mt-4 md:mt-0">
+          <Button 
+            variant="default"
+            asChild
+            className="whitespace-nowrap"
+          >
+            <a 
+              href={bannerData.affiliate_link} 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              Register with {bannerData.broker_name}
+            </a>
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleCopyWallet}
+            className="whitespace-nowrap bg-opacity-80 backdrop-blur-sm"
+          >
+            Donate Crypto
+          </Button>
+        </div>
+      </div>
+      <div className="mt-3 p-2 bg-gray-100 dark:bg-gray-800 rounded-md overflow-x-auto">
+        <code className="text-xs text-gray-700 dark:text-gray-300 font-mono">
+          {bannerData.crypto_wallet}
+        </code>
       </div>
     </div>
   );

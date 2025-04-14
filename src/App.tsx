@@ -10,7 +10,6 @@ import CategoryPage from "./pages/CategoryPage";
 import StrategyPage from "./pages/StrategyPage";
 import AboutPage from "./pages/AboutPage";
 import NotFound from "./pages/NotFound";
-import SupportBanner from "./components/SupportBanner";
 
 const queryClient = new QueryClient();
 
@@ -21,7 +20,6 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <div className="flex flex-col min-h-screen">
-          <SupportBanner />
           <Navbar />
           <main className="flex-grow mt-16">
             <Routes>
